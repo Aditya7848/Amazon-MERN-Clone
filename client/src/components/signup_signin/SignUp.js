@@ -9,6 +9,7 @@ const SignUp = () => {
     mobile: "",
     cpassword: "",
   });
+  console.log(uData);
   const handleData = (e) => {
     const { name, value } = e.target;
     setUData(() => {

@@ -9,7 +9,6 @@ const Signin = () => {
   });
   function handleData(e) {
     const { name, value } = e.target;
-    console.log(name, value);
     setLogData(() => {
       return {
         ...logData,
