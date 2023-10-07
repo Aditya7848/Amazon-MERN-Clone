@@ -7,7 +7,6 @@ import { useEffect } from "react";
 
 const Maincomp = () => {
   const { products } = useSelector((state) => state.getproductsdata);
-  console.log(products);
 
   const dispatch = useDispatch();
 
