@@ -3,6 +3,8 @@ const router = new express.Router();
 const Products = require("../models/productsSchema");
 const User = require("../models/userSchema");
 
+const bcrypt = require("bcryptjs");
+
 router.get("/getproducts", async (req, res) => {
   try {
     const productsdata = await Products.find();
@@ -56,6 +58,32 @@ router.post("/register", async (req, res) => {
       res.status(200).json(storedata);
     }
   } catch (error) {}
+});
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    res.status(400).json({ error: "fill all the data" });
+  }
+
+  try {
+    const userlogin = await User.findOne({ email: email });
+
+    if (userlogin) {
+      const isMatch = await bcrypt.compare(password, userlogin.password);
+
+      if (!isMatch) {
+        res.status(400).json({ error: "Passwords do not match." });
+      } else {
+        res
+          .status(200)
+          .json({ success: "Passwords match.", fname: userlogin.fname });
+      }
+    }
+  } catch (error) {
+    res.status(400).json({ error: "Invalid password." });
+  }
 });
 
 module.exports = router;

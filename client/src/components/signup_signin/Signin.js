@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./signin.css";
 import { NavLink } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signin = () => {
   const [logData, setLogData] = useState({
@@ -16,6 +18,31 @@ const Signin = () => {
       };
     });
   }
+  async function loginHandler(e) {
+    e.preventDefault();
+
+    const { email, password } = logData;
+    const res = await fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+
+    if (res.status === 400 || !data) {
+      toast.error("Invalid details.", {
+        position: "top-center",
+      });
+    } else if (res.status === 200) {
+      toast.success("Login successfull.", {
+        position: "top-center",
+      });
+      console.log(data);
+      setLogData({ ...logData, email: "", password: "" });
+    }
+  }
 
   return (
     <>
@@ -25,7 +52,7 @@ const Signin = () => {
             <img src="./blacklogoamazon.png" alt="amazonLogo" />
           </div>
           <div className="sign_form">
-            <form action="">
+            <form action="POST">
               <h1>Sign-in</h1>
               <div className="form_data">
                 <label htmlFor="">Email</label>
@@ -47,8 +74,11 @@ const Signin = () => {
                   onChange={handleData}
                 />
               </div>
-              <button className="signin_btn">Continue</button>
+              <button className="signin_btn" onClick={loginHandler}>
+                Continue
+              </button>
             </form>
+            <ToastContainer />
           </div>
           <div className="create_accountinfo">
             <p>New to Amazon</p>
