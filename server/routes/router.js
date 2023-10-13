@@ -73,6 +73,13 @@ router.post("/login", async (req, res) => {
     if (userlogin) {
       const isMatch = await bcrypt.compare(password, userlogin.password);
 
+      const token = await userlogin.generateAuthtoken();
+
+      res.cookie("Amazonweb", token, {
+        expires: new Date(Date.now() + 900000),
+        httpOnly: true,
+      });
+
       if (!isMatch) {
         res.status(400).json({ error: "Passwords do not match." });
       } else {
@@ -80,6 +87,8 @@ router.post("/login", async (req, res) => {
           .status(200)
           .json({ success: "Passwords match.", fname: userlogin.fname });
       }
+    } else {
+      res.status(400).json({ error: "User does not exist." });
     }
   } catch (error) {
     res.status(400).json({ error: "Invalid password." });

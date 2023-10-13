@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 require("./db/conn");
-
+const cookieParser = require("cookie-parser");
 const Products = require("./models/productsSchema");
 
 const DefaultData = require("./defaultdata");
@@ -12,6 +12,7 @@ const router = require("./routes/router");
 app.use(express.json());
 app.use(cors({}));
 app.use(router);
+app.use(cookieParser(""));
 
 const port = process.env.PORT || 8005;
 
